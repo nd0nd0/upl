@@ -28,7 +28,7 @@ instructions:
 > requests from branches on your fork. To do this, run:
 >
 > ```
-> git remote add upstream https://github.com/epicweb-dev/epic-stack.git
+> git remote add upstream https://github.com/nd0nd0/upl.git
 > git fetch upstream
 > git branch --set-upstream-to=upstream/main main
 > ```
