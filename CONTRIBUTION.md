@@ -73,11 +73,5 @@ npm run dev
 
 And open up `http://localhost:3000` and rock!
 
-## Help Needed
-
-Feel free to take any code from within this project and turn it into a library
-(appropriate attribution is appreciated). Then come back and make
-a PR to use your new library.
-
-NOTE: Actual adoption of your library is not guaranteed. Offloading maintenance
+NOTE: Actual adoption of any library is not guaranteed. Offloading maintenance
 and adaptability is a delicate balance.
