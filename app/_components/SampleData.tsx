@@ -6,9 +6,13 @@ import { serverClient } from "../_trpc/server"
     data: Awaited<ReturnType<(typeof serverClient)['getSampleData']>> 
  }
 export default function SampleData({data}:props) {
-//   const sampleData = trpc.getSampleData.useQuery()
+  const sampleData = trpc.getSampleData.useQuery(undefined,{
+    initialData:data,
+    refetchOnMount: false,
+    refetchOnReconnect: false
+  })
   return (
     
-     <div>{JSON.stringify(data)}</div>
+     <div>{JSON.stringify(sampleData.data)}</div>
   )
 }
