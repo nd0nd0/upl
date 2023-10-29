@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
+    "@tanstack/react-query": "^4.32.6",
+    "@trpc/client": "^10.43.0",
+    "@trpc/react-query": "^10.43.0",
+    "@trpc/server": "^10.43.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "lucide-react": "^0.290.0",
