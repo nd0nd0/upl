@@ -3,7 +3,6 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Pool } from "pg";
 import postgres from "postgres";
-import { notes } from './notes/schema';
 
 const pool = new Pool({
     connectionString:process.env.DATABASE_URL!

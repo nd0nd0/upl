@@ -1,0 +1,1 @@
+ALTER TABLE "team_to_fixtures" ADD CONSTRAINT "team_to_fixtures_fixture_id_team_id" PRIMARY KEY("fixture_id","team_id");
