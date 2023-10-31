@@ -1,0 +1,338 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "id": "297569ca-949a-4d31-b5aa-f9217897a3bb",
+  "prevId": "378fcbd7-32b4-4481-9af9-53a8f106a855",
+  "tables": {
+    "fixtures": {
+      "name": "fixtures",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "reply": {
+          "name": "reply",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "neutral_ground": {
+          "name": "neutral_ground",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "extra_time": {
+          "name": "extra_time",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "shoot_out": {
+          "name": "shoot_out",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "behind_closed_doors": {
+          "name": "behind_closed_doors",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "kick_off": {
+          "name": "kick_off",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provisional_kick_off": {
+          "name": "provisional_kick_off",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ground_id": {
+          "name": "ground_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "game_week_id": {
+          "name": "game_week_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "game_week": {
+      "name": "game_week",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "week": {
+          "name": "week",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "season_id": {
+          "name": "season_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "competition_phase_id": {
+          "name": "competition_phase_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "ground": {
+      "name": "ground",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "city": {
+          "name": "city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "fixture_id": {
+          "name": "fixture_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ground_fixture_id_fixtures_id_fk": {
+          "name": "ground_fixture_id_fixtures_id_fk",
+          "tableFrom": "ground",
+          "tableTo": "fixtures",
+          "columnsFrom": [
+            "fixture_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "players": {
+      "name": "players",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "fixture_id": {
+          "name": "fixture_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "players_fixture_id_teams_id_fk": {
+          "name": "players_fixture_id_teams_id_fk",
+          "tableFrom": "players",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "fixture_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "team_to_fixtures": {
+      "name": "team_to_fixtures",
+      "schema": "",
+      "columns": {
+        "fixture_id": {
+          "name": "fixture_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "team_to_fixtures_fixture_id_fixtures_id_fk": {
+          "name": "team_to_fixtures_fixture_id_fixtures_id_fk",
+          "tableFrom": "team_to_fixtures",
+          "tableTo": "fixtures",
+          "columnsFrom": [
+            "fixture_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "team_to_fixtures_team_id_teams_id_fk": {
+          "name": "team_to_fixtures_team_id_teams_id_fk",
+          "tableFrom": "team_to_fixtures",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "team_to_fixtures_fixture_id_team_id": {
+          "name": "team_to_fixtures_fixture_id_team_id",
+          "columns": [
+            "fixture_id",
+            "team_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "teams": {
+      "name": "teams",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "teamType": {
+          "name": "teamType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shortName": {
+          "name": "shortName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "abbr": {
+          "name": "abbr",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fixture_id": {
+          "name": "fixture_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "teams_fixture_id_fixtures_id_fk": {
+          "name": "teams_fixture_id_fixtures_id_fk",
+          "tableFrom": "teams",
+          "tableTo": "fixtures",
+          "columnsFrom": [
+            "fixture_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}

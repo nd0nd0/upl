@@ -5,17 +5,15 @@ import {
 	date,
 	integer,
 	json,
+	numeric,
+	pgEnum,
 	pgTable,
 	primaryKey,
 	serial,
 	text,
 } from "drizzle-orm/pg-core";
-
-export const notes = pgTable("notes", {
-	id: serial("id").primaryKey(),
-	name: text("name"),
-});
-
+export const positionEnum = pgEnum('position', ['GoalKeeper', 'Midfielder', 'Defender']);
+export const isoCodeEnum = pgEnum('isoCode', ['UG', 'KE', 'RW', 'TZ']);
 export const teams = pgTable("teams", {
 	name: text("name"),
 	teamType: text("teamType"),
@@ -24,7 +22,17 @@ export const teams = pgTable("teams", {
 	abbr: text("abbr"),
 	fixtureId: integer("fixture_id").references(() => fixtures.id),
 });
-
+export const players = pgTable("players", {
+	name: text("name"),
+	position: positionEnum('position'),
+	shirtNumber: bigint('shirt_number',{mode:'number'}),
+	loan: boolean('loan').default(false),
+	nationalTeamCode: isoCodeEnum('nationalTeamCode'),
+	height: bigint('height', {mode:'bigint'}),
+	birthDay: date('birth_day'),
+	id: serial("id").primaryKey(),
+	teamId: integer("fixture_id").references(() => teams.id),
+});
 export const fixtures = pgTable("fixtures", {
 	id: serial("id").primaryKey(),
 	replay: boolean("reply").default(false),
@@ -142,12 +150,13 @@ export const fixtures = pgTable("fixtures", {
 	//     "opta": "g2367647"
 	// },
 });
-
 export const grounds = pgTable("ground", {
 	name: text("name"),
 	city: text("city"),
 	source: text("source"),
 	id: serial("id").primaryKey(),
+	fixtureId: integer("fixture_id").references(() => fixtures.id),
+
 });
 export const gameWeek = pgTable("game_week", {
 	id: serial("id").primaryKey(),
@@ -182,25 +191,24 @@ export const gameWeek = pgTable("game_week", {
 	// },
 });
 
-//------ Fixture Ground Relations ------ //
+//----- Ground Relations ------//
 
-export const fixtures_ground_relationship = relations(fixtures, ({ many }) => ({
+export const ground_relations = relations(grounds, ({ many }) => ({
 	fixtures: many(fixtures),
 }));
 
-export const fixture_to_ground_relationship = relations(
-	fixtures,
-	({ one }) => ({
-		ground: one(grounds, {
-			fields: [fixtures.groundId],
-			references: [grounds.id],
-		}),
-	})
-);
 
-//------ End Fixture Ground Relations ------ //
+//----- Player Relations -----//
+export const player_relations = relations(players, ({ one }) => ({
+	team: one(fixtures),
+}));
 
-//------  Team Relations ------ //
+//----- Team Relations ---- //
+
+export const team_relations = relations(teams, ({ many }) => ({
+	teamToFixtures: many(teamToFixtures),
+	squad: many(players)
+})); 
 
 export const teamToFixtures = pgTable(
 	"team_to_fixtures",
@@ -217,19 +225,15 @@ export const teamToFixtures = pgTable(
 	})
 );
 
-export const team_relationships = relations(teams, ({ many }) => ({
-	teamToFixtures: many(teamToFixtures),
-})); 
-
-//------ End Team Relations ------ //
-
 //------  Fixture Relations ------ //
 
-export const fixture_relationships = relations(fixtures, ({ many }) => ({
+export const fixture_relations = relations(fixtures, ({ many, one }) => ({
 	teams: many(teamToFixtures),
+	ground: one(grounds, {
+		fields:[fixtures.groundId],
+		references:[grounds.id]
+	})
 }));
-
-//------  End Fixture Relations ------ //
 
 export const fixture_to_team_relations = relations(
 	teamToFixtures,
@@ -252,5 +256,3 @@ export type NewFixture = InferInsertModel<typeof fixtures>;
 export type Fixtures = InferSelectModel<typeof fixtures>;
 export type NewGround = InferInsertModel<typeof grounds>;
 export type Grounds = InferSelectModel<typeof grounds>;
-export type NewNotes = InferInsertModel<typeof notes>;
-export type Notes = InferSelectModel<typeof notes>;
