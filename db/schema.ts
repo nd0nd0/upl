@@ -5,7 +5,6 @@ import {
 	date,
 	integer,
 	json,
-	numeric,
 	pgEnum,
 	pgTable,
 	primaryKey,
@@ -191,25 +190,32 @@ export const gameWeek = pgTable("game_week", {
 	// },
 });
 
-//----- Ground Relations ------//
-
+//--- Ground Relations ---//
 export const ground_relations = relations(grounds, ({ many }) => ({
 	fixtures: many(fixtures),
 }));
 
-
-//----- Player Relations -----//
+//--- Player Relations ---//
 export const player_relations = relations(players, ({ one }) => ({
 	team: one(fixtures),
 }));
 
-//----- Team Relations ---- //
-
+//--- Team Relations ----//
 export const team_relations = relations(teams, ({ many }) => ({
 	teamToFixtures: many(teamToFixtures),
 	squad: many(players)
 })); 
 
+//--- Fixture Relations ---//
+export const fixture_relations = relations(fixtures, ({ many, one }) => ({
+	teams: many(teamToFixtures),
+	ground: one(grounds, {
+		fields:[fixtures.groundId],
+		references:[grounds.id]
+	})
+}));
+
+///unions
 export const teamToFixtures = pgTable(
 	"team_to_fixtures",
 	{
@@ -224,16 +230,6 @@ export const teamToFixtures = pgTable(
 		pk: primaryKey(t.fixtureId, t.teamId),
 	})
 );
-
-//------  Fixture Relations ------ //
-
-export const fixture_relations = relations(fixtures, ({ many, one }) => ({
-	teams: many(teamToFixtures),
-	ground: one(grounds, {
-		fields:[fixtures.groundId],
-		references:[grounds.id]
-	})
-}));
 
 export const fixture_to_team_relations = relations(
 	teamToFixtures,
